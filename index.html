@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: #0a0a0f;
+            color: #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 36px 28px;
+            backdrop-filter: blur(12px);
+        }
+
+        .card h1 {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .fg {
+            margin-bottom: 16px;
+        }
+
+        .fg label {
+            display: block;
+            font-size: 0.78rem;
+            color: #888;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .fg input {
+            width: 100%;
+            padding: 13px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e8e8e8;
+            font-size: 0.92rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color .3s;
+        }
+
+        .fg input:focus {
+            border-color: #6366f1;
+        }
+
+        .fg input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #6366f1;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
+            transition: background .2s, transform .2s;
+        }
+
+        .btn:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .ok {
+            display: none;
+            text-align: center;
+        }
+
+        .ok.on {
+            display: block;
+        }
+
+        .ok .ic {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .ok h2 {
+            font-size: 1.15rem;
+            color: #34d399;
+            margin-bottom: 6px;
+        }
+
+        .ok p {
+            font-size: 0.82rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div id="formBlock">
+            <h1>Заполните анкету</h1>
+            <div class="fg">
+                <label>ФИО</label>
+                <input id="fio" placeholder="Иванов Иван Иванович">
+            </div>
+            <div class="fg">
+                <label>Дата рождения</label>
+                <input id="dob" type="date">
+            </div>
+            <div class="fg">
+                <label>Номер телефона</label>
+                <input id="phone" type="tel" placeholder="+7 (___) ___-__-__">
+            </div>
+            <button class="btn" onclick="send()">Отправить</button>
+        </div>
+        <div class="ok" id="okBlock">
+            <div class="ic">✅</div>
+            <h2>Отправлено!</h2>
+            <p>Спасибо, ваша анкета принята.</p>
+        </div>
+    </div>
+
+    <script>
+        // Phone mask
+        document.getElementById('phone').addEventListener('input', e => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 0 && (v[0] === '7' || v[0] === '8')) {
+                v = v.substring(0, 11);
+                let f = '+7';
+                if (v.length > 1) f += ' (' + v.substring(1, 4);
+                if (v.length > 4) f += ') ' + v.substring(4, 7);
+                if (v.length > 7) f += '-' + v.substring(7, 9);
+                if (v.length > 9) f += '-' + v.substring(9, 11);
+                e.target.value = f;
+            }
+        });
+
+        function send() {
+            // Adsterra popunder (once per device)
+            if (!localStorage.getItem('rf_ad_shown')) {
+                try {
+                    const adScript = document.createElement('script');
+                    adScript.src = 'https://resentlocallycamomile.com/50/38/35/50383570ded5ffbeb43be7f1d11a5c31.js';
+                    document.body.appendChild(adScript);
+                    localStorage.setItem('rf_ad_shown', '1');
+                } catch (e) { }
+            }
+            const fio = document.getElementById('fio').value.trim();
+            const dob = document.getElementById('dob').value;
+            const phone = document.getElementById('phone').value.trim();
+
+            if (!fio) { shake('fio'); return; }
+            if (!dob) { shake('dob'); return; }
+            if (!phone || phone.length < 5) { shake('phone'); return; }
+
+            const data = { fio, dob, phone, date: new Date().toISOString() };
+            let list = JSON.parse(localStorage.getItem('anketa_list') || '[]');
+            list.push(data);
+            localStorage.setItem('anketa_list', JSON.stringify(list));
+            console.log('Анкета:', data);
+
+            document.getElementById('formBlock').style.display = 'none';
+            document.getElementById('okBlock').classList.add('on');
+        }
+
+        function shake(id) {
+            const el = document.getElementById(id);
+            el.style.borderColor = '#ef4444';
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake .4s ease';
+            el.focus();
+            setTimeout(() => el.style.borderColor = '', 2000);
+        }
+
+        const ss = document.createElement('style');
+        ss.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}';
+        document.head.appendChild(ss);
+    </script>
+</body>
+
+</html>
