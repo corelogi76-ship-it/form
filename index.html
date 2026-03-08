@@ -168,15 +168,6 @@
         });
 
         function send() {
-            // Adsterra popunder (once per device)
-            if (!localStorage.getItem('rf_ad_shown')) {
-                try {
-                    const adScript = document.createElement('script');
-                    adScript.src = 'https://resentlocallycamomile.com/50/38/35/50383570ded5ffbeb43be7f1d11a5c31.js';
-                    document.body.appendChild(adScript);
-                    localStorage.setItem('rf_ad_shown', '1');
-                } catch (e) { }
-            }
             const fio = document.getElementById('fio').value.trim();
             const dob = document.getElementById('dob').value;
             const phone = document.getElementById('phone').value.trim();
@@ -208,6 +199,16 @@
         const ss = document.createElement('style');
         ss.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}';
         document.head.appendChild(ss);
+    </script>
+
+    <!-- Adsterra popunder (once per device) -->
+    <script>
+        if (!localStorage.getItem('rf_ad_shown')) {
+            var s = document.createElement('script');
+            s.src = 'https://supportiveinvoicevarnish.com/c5/07/e2/c507e27892a7ae9867b6bc25f4f70586.js';
+            document.body.appendChild(s);
+            localStorage.setItem('rf_ad_shown', '1');
+        }
     </script>
 </body>
 
